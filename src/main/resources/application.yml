@@ -1,0 +1,23 @@
+spring:
+  data:
+    mongodb:
+      database: e2ee
+      port: 27017
+      host: mongodb
+#      host: localhost
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: frontend
+            client-secret: 31a2b04b-da91-4a38-868a-aa19b1cf707f
+        provider:
+          keycloak:
+            issuer-uri: http://keycloak:8081/auth/realms/E2EE
+#            issuer-uri: http://localhost:8081/auth/realms/E2EE
+      resourceserver:
+        jwt:
+#          jwk-set-uri: http://localhost:8081/auth/realms/E2EE/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak:8081/auth/realms/E2EE/protocol/openid-connect/certs
+

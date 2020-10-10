@@ -1,0 +1,63 @@
+version: '3'
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgresql
+    volumes:
+      - ./db/postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    volumes:
+    - ./imports:/data/imports
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: teyyihan
+      KEYCLOAK_PASSWORD: teyyihan
+    command:
+      - "-Djboss.socket.binding.port-offset=1"
+      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+      - "-b 0.0.0.0 -Dkeycloak.import=/data/imports/realm-export.json"
+    ports:
+      - 8081:8081
+    depends_on:
+      - postgres
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=e2ee
+      - MONGO_INIT_ROOT_USERNAME=teyyihan
+      - MONGO_INIT_ROOT_PASSWORD=teyyihan
+    volumes:
+      - ./db/mongo-volume:/data/db
+    ports:
+      - 27017-27019:27017-27019
+
+  spring:
+    build: spring_app/
+    ports:
+      - 8080:8080
+    container_name: spring
+    depends_on:
+      - keycloak
+      - mongodb
+    links:
+      - mongodb
