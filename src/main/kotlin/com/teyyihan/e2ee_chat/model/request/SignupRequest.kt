@@ -1,6 +1,5 @@
 package com.teyyihan.e2ee_chat.model.request
 
-import java.util.HashSet
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 

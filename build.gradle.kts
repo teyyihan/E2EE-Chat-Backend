@@ -65,7 +65,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.register<Copy>("copyJar") {
-    from(file("$buildDir/libs/e2ee_chat-1.0.jar"))
+    from(file("$buildDir/libs/backend-1.0.jar"))
     into(file("docker-compose/spring_app"))
 }
 
